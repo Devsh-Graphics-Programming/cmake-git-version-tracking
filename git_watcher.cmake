@@ -97,6 +97,7 @@ CHECK_REQUIRED_VARIABLE(GIT_EXECUTABLE)
 set(_state_variable_names
     GIT_RETRIEVED_STATE
     GIT_HEAD_SHA1
+    GIT_HEAD_SHORT_SHA1
     GIT_IS_DIRTY
     GIT_AUTHOR_NAME
     GIT_AUTHOR_EMAIL
@@ -105,6 +106,8 @@ set(_state_variable_names
     GIT_COMMIT_BODY
     GIT_DESCRIBE
     GIT_BRANCH
+    GIT_TAG
+    GIT_TAG_NAME
     # >>>
     # 1. Add the name of the additional git variable you're interested in monitoring
     #    to this list.
@@ -177,6 +180,11 @@ function(GetGitState _working_dir)
         set(ENV{GIT_HEAD_SHA1} ${output})
     endif()
 
+    RunGitCommand(show -s "--format=%h" ${object})
+    if(exit_code EQUAL 0)
+        set(ENV{GIT_HEAD_SHORT_SHA1} "${output}")
+    endif()
+
     RunGitCommand(show -s "--format=%an" ${object})
     if(exit_code EQUAL 0)
         set(ENV{GIT_AUTHOR_NAME} "${output}")
@@ -231,6 +239,22 @@ function(GetGitState _working_dir)
         set(ENV{GIT_DESCRIBE} "${output}")
     endif()
     
+    # Get latest tag
+    RunGitCommand(describe --tags ${object})
+    if(NOT exit_code EQUAL 0)
+        set(ENV{GIT_TAG} "unknown")
+    else()
+        set(ENV{GIT_TAG} "${output}")
+    endif()
+
+    # Get latest tag name
+    RunGitCommand(describe --tags --abbrev=0 ${object})
+    if(NOT exit_code EQUAL 0)
+        set(ENV{GIT_TAG_NAME} "unknown")
+    else()
+        set(ENV{GIT_TAG_NAME} "${output}")
+    endif()
+
     # Convert HEAD to a symbolic ref. This can fail, in which case we just
     # set that variable to HEAD.
     set(_permit_git_failure ON)

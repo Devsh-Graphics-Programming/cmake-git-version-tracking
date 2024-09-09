@@ -1,6 +1,7 @@
 #include "git_info.h"
 
-const GitInfo git_info = {
+namespace nbl{
+    const GitInfo git_info = {
     .isPopulated = @GIT_RETRIEVED_STATE@,
     .hasUncommittedChanges = @GIT_IS_DIRTY@,
     .commitAuthorName =  "@GIT_AUTHOR_NAME@",
@@ -14,8 +15,9 @@ const GitInfo git_info = {
     .branchName = "@GIT_BRANCH@",
     .latestTag = "@GIT_TAG@",
     .latestTagName = "@GIT_TAG_NAME@"
-};
+    };
 
-const GitInfo getGitInfo() {
-    return git_info;
-};
+    const GitInfo getGitInfo() {
+        return git_info;
+    };
+} // namespace nbl

@@ -5,24 +5,27 @@
 
 #include "BuildConfigOptions.h"
 
-struct GitInfo {
-    bool isPopulated;
-    bool hasUncommittedChanges;
-    const char* commitAuthorName;
-    const char* commitAuthorEmail;
-    const char* commitHash;
-    const char* commitShortHash;
-    const char* commitDate;
-    const char* commitSubject;
-    const char* commitBody;
-    const char* describe;
-    const char* branchName;
-    const char* latestTag;
-    const char* latestTagName;
-};
+namespace nbl {
+    struct GitInfo {
+        bool isPopulated;
+        bool hasUncommittedChanges;
+        const char* commitAuthorName;
+        const char* commitAuthorEmail;
+        const char* commitHash;
+        const char* commitShortHash;
+        const char* commitDate;
+        const char* commitSubject;
+        const char* commitBody;
+        const char* describe;
+        const char* branchName;
+        const char* latestTag;
+        const char* latestTagName;
+    };
 
-// internal use
-extern const GitInfo git_info;
 
-// public use
-NBL_API2 const GitInfo getGitInfo();
+    // internal use
+    extern const GitInfo git_info;
+
+    // public use
+    NBL_API2 const GitInfo getGitInfo();
+} // namespece nbl

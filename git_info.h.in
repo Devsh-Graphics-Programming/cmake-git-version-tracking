@@ -1,0 +1,39 @@
+#ifndef __GIT_INFO_H_INCLUDED__
+#define __GIT_INFO_H_INCLUDED__
+@GTML_INFO@
+
+// based on https://raw.githubusercontent.com/andrew-hardin/cmake-git-version-tracking/master/git.h
+// > Released under the MIT License.
+// > https://raw.githubusercontent.com/andrew-hardin/cmake-git-version-tracking/master/LICENSE
+
+#include <cstdint>
+
+namespace nbl::gtml {
+    struct GitInfo {
+        bool isPopulated;
+        bool hasUncommittedChanges;
+        const char* commitAuthorName;
+        const char* commitAuthorEmail;
+        const char* commitHash;
+        const char* commitShortHash;
+        const char* commitDate;
+        const char* commitSubject;
+        const char* commitBody;
+        const char* describe;
+        const char* branchName;
+        const char* latestTag;
+        const char* latestTagName;
+    };
+
+    enum E_GIT_REPO_META : uint8_t
+    {
+        @GTML_ENUMS@,
+        EGRM_COUNT
+    };
+
+    extern const GitInfo gitMeta[EGRM_COUNT];
+    @GTML_EXTERNS@;
+
+} // namespece nbl::gtml
+
+#endif //__GIT_INFO_H_INCLUDED__

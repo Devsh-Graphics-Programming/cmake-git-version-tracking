@@ -321,7 +321,7 @@ function(CheckGit _working_dir _state_changed)
     # Update the state to include the SHA256 for the pre-configure file.
     # This forces the post-configure file to be regenerated if the
     # pre-configure file has changed.
-    file(SHA256 ${PRE_CONFIGURE_FILE} preconfig_hash)
+    file(SHA256 "${PRE_CONFIGURE_FILE}" preconfig_hash)
     string(SHA256 state "${preconfig_hash}${state}")
 
     # Check if the state has changed compared to the backup on disk.
@@ -348,23 +348,25 @@ endfunction()
 #              check the state of git before every build. If the state has
 #              changed, then a file is configured.
 function(SetupGitMonitoring)
-    add_custom_target(check_git
+    add_custom_target("${GTML_TARGET_NAME}"
         ALL
-        DEPENDS ${PRE_CONFIGURE_FILE}
+        DEPENDS "${PRE_CONFIGURE_FILE}"
         BYPRODUCTS
-            ${POST_CONFIGURE_FILE}
-            ${GIT_STATE_FILE}
+            "${POST_CONFIGURE_FILE}"
+            "${GIT_STATE_FILE}"
         COMMENT "Checking the git repository for changes..."
         COMMAND
-            ${CMAKE_COMMAND}
+            "${CMAKE_COMMAND}"
             -D_BUILD_TIME_CHECK_GIT=TRUE
-            -DGIT_WORKING_DIR=${GIT_WORKING_DIR}
-            -DGIT_EXECUTABLE=${GIT_EXECUTABLE}
-            -DGIT_STATE_FILE=${GIT_STATE_FILE}
-            -DPRE_CONFIGURE_FILE=${PRE_CONFIGURE_FILE}
-            -DPOST_CONFIGURE_FILE=${POST_CONFIGURE_FILE}
+            -DGIT_WORKING_DIR="${GIT_WORKING_DIR}"
+            -DGIT_EXECUTABLE="${GIT_EXECUTABLE}"
+            -DGIT_STATE_FILE="${GIT_STATE_FILE}"
+            -DPRE_CONFIGURE_FILE="${PRE_CONFIGURE_FILE}"
+            -DPOST_CONFIGURE_FILE="${POST_CONFIGURE_FILE}"
             -DGIT_FAIL_IF_NONZERO_EXIT=${GIT_FAIL_IF_NONZERO_EXIT}
             -DGIT_IGNORE_UNTRACKED=${GIT_IGNORE_UNTRACKED}
+            -DGTML_NAME="${GTML_NAME}"
+            -DGTML_INFO="${GTML_INFO}"
             -P "${CMAKE_CURRENT_LIST_FILE}")
 endfunction()
 

@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.2...3.27)
-project(cmake_git_version_tracking
+# gtml - git tracking meta library
+project(gtml
     LANGUAGES CXX)
 
 set(NBL_GTML_TRACKED_TARGETS CACHE INTERNAL "")

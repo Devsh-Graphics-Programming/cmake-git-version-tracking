@@ -348,12 +348,10 @@ endfunction()
 #              check the state of git before every build. If the state has
 #              changed, then a file is configured.
 function(SetupGitMonitoring)
-    add_custom_target("${GTML_TARGET_NAME}"
-        ALL
-        DEPENDS "${PRE_CONFIGURE_FILE}"
-        BYPRODUCTS
-            "${POST_CONFIGURE_FILE}"
-            "${GIT_STATE_FILE}"
+    add_custom_command(
+        OUTPUT "${POST_CONFIGURE_FILE}"
+        DEPENDS "${PRE_CONFIGURE_FILE}" "${NBL_GTML_STAMP_FILE}"
+        BYPRODUCTS "${GIT_STATE_FILE}"
         COMMENT "Checking the git repository for changes..."
         COMMAND
             "${CMAKE_COMMAND}"

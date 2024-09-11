@@ -5,6 +5,7 @@ project(cmake_git_version_tracking
 set(NBL_GTML_TRACKED_TARGETS CACHE INTERNAL "")
 set(NBL_GTML_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}" CACHE INTERNAL "")
 set(NBL_GTML_PROJECT_NAME "${PROJECT_NAME}" CACHE INTERNAL "")
+set(NBL_GTML_STAMP_FILE "${NBL_GTML_BINARY_DIR}/stamp" CACHE INTERNAL "")
 
 # useage notes:
 # 1. `add_subdirectory` this project
@@ -67,6 +68,9 @@ function(NBL_GENERATE_GIT_TRACKING_META)
 
     add_library("${NBL_GTML_PROJECT_NAME}" STATIC ${GTML_TARGET_SOURCES} "${NBL_GTML_BINARY_DIR}/git_info.cpp")
     target_include_directories("${NBL_GTML_PROJECT_NAME}" SYSTEM PUBLIC "${NBL_GTML_BINARY_DIR}")
-    add_dependencies("${NBL_GTML_PROJECT_NAME}" ${GTML_TARGET_NAMES})
+    
+    # triggers all git check custom commands each build
+    add_custom_target(gtml_git_check ALL COMMAND "${CMAKE_COMMAND}" -E touch "${NBL_GTML_STAMP_FILE}")
+    add_dependencies("${NBL_GTML_PROJECT_NAME}" gtml_git_check)
 
 endfunction(NBL_GENERATE_GIT_TRACKING_META)

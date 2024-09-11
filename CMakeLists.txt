@@ -12,7 +12,7 @@ set(NBL_GTML_STAMP_FILE "${NBL_GTML_BINARY_DIR}/stamp" CACHE INTERNAL "")
 # 1. `add_subdirectory` this project
 # 2. use function `NBL_ADD_GIT_TRACKING_META_LIBRARY("name" "GIT_PATH")` to track any git_repo
 # 3. call `NBL_GENERATE_GIT_TRACKING_META()` to finalize and configure required headers/sources
-# 4. link this anywhere you need `target_link_libraries(TARGET PUBLIC cmake_git_version_tracking)`
+# 4. link this anywhere you need `target_link_libraries(TARGET PUBLIC gtml)`
 # 5. #include "git_info.h" in your code
 # 6. profit
 

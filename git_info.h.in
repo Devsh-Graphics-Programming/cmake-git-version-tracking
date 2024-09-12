@@ -1,5 +1,5 @@
-#ifndef __GIT_INFO_H_INCLUDED__
-#define __GIT_INFO_H_INCLUDED__
+#ifndef _GIT_INFO_H_INCLUDED_
+#define _GIT_INFO_H_INCLUDED_
 @GTML_INFO@
 
 // based on https://raw.githubusercontent.com/andrew-hardin/cmake-git-version-tracking/master/git.h
@@ -36,4 +36,4 @@ namespace nbl::gtml {
 
 } // namespece nbl::gtml
 
-#endif //__GIT_INFO_H_INCLUDED__
+#endif //_GIT_INFO_H_INCLUDED_

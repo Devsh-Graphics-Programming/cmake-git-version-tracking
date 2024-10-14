@@ -85,6 +85,7 @@ CHECK_OPTIONAL_VARIABLE(GIT_STATE_FILE "${CMAKE_CURRENT_BINARY_DIR}/git-state-ha
 CHECK_OPTIONAL_VARIABLE(GIT_WORKING_DIR "${CMAKE_SOURCE_DIR}")
 CHECK_OPTIONAL_VARIABLE_NOPATH(GIT_FAIL_IF_NONZERO_EXIT TRUE)
 CHECK_OPTIONAL_VARIABLE_NOPATH(GIT_IGNORE_UNTRACKED FALSE)
+CHECK_OPTIONAL_VARIABLE_NOPATH(GIT_EXCLUDE_IS_DIRTY FALSE)
 
 # Check the optional git variable.
 # If it's not set, we'll try to find it using the CMake packaging system.
@@ -162,18 +163,27 @@ function(GetGitState _working_dir)
     else()
         set(untracked_flag "-unormal")
     endif()
-    RunGitCommand(status --porcelain ${untracked_flag})
-    if(NOT exit_code EQUAL 0)
-        set(ENV{GIT_IS_DIRTY} "false")
+
+    if(GIT_EXCLUDE_IS_DIRTY)
+        set(ENV{GIT_IS_DIRTY} "std::nullopt, // <unknown - this option has been excluded from checks explicitly with GIT_EXCLUDE_IS_DIRTY!>")
     else()
-        if(NOT "${output}" STREQUAL "")
-            set(ENV{GIT_IS_DIRTY} "true")
-        else()
+        RunGitCommand(status --porcelain ${untracked_flag})
+        if(NOT exit_code EQUAL 0)
             set(ENV{GIT_IS_DIRTY} "false")
+        else()
+            if(NOT "${output}" STREQUAL "")
+                set(ENV{GIT_IS_DIRTY} "true")
+            else()
+                set(ENV{GIT_IS_DIRTY} "false")
+            endif()
         endif()
     endif()
 
     # There's a long list of attributes grabbed from git show.
+    # TODO: Tadzio, execute everything within single execute_command - the reason is all COMMANDS
+    # within single invocation will be tried concurently and you can gain a lot of perf there
+    # total 11 separate execute_commands gets executed currently
+
     set(object HEAD)
     RunGitCommand(show -s "--format=%H" ${object})
     if(exit_code EQUAL 0)
@@ -363,6 +373,7 @@ function(SetupGitMonitoring)
             -DPOST_CONFIGURE_FILE="${POST_CONFIGURE_FILE}"
             -DGIT_FAIL_IF_NONZERO_EXIT=${GIT_FAIL_IF_NONZERO_EXIT}
             -DGIT_IGNORE_UNTRACKED=${GIT_IGNORE_UNTRACKED}
+            -DGIT_EXCLUDE_IS_DIRTY=${GIT_EXCLUDE_IS_DIRTY}
             -DGTML_NAME="${GTML_NAME}"
             -DGTML_INFO="${GTML_INFO}"
             -P "${CMAKE_CURRENT_LIST_FILE}")

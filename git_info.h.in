@@ -7,11 +7,12 @@
 // > https://raw.githubusercontent.com/andrew-hardin/cmake-git-version-tracking/master/LICENSE
 
 #include <cstdint>
+#include <optional>
 
 namespace nbl::gtml {
     struct GitInfo {
         bool isPopulated;
-        bool hasUncommittedChanges;
+        std::optional<bool> hasUncommittedChanges;
         const char* commitAuthorName;
         const char* commitAuthorEmail;
         const char* commitHash;

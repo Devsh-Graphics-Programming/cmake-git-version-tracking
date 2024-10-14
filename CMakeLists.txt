@@ -69,6 +69,7 @@ function(NBL_GENERATE_GIT_TRACKING_META)
 
     add_library("${NBL_GTML_PROJECT_NAME}" STATIC ${GTML_TARGET_SOURCES} "${NBL_GTML_BINARY_DIR}/git_info.cpp")
     target_include_directories("${NBL_GTML_PROJECT_NAME}" SYSTEM PUBLIC "${NBL_GTML_BINARY_DIR}")
+    set_target_properties("${NBL_GTML_PROJECT_NAME}" PROPERTIES UNITY_BUILD TRUE)
     
     # triggers all git check custom commands each build
     add_custom_target(gtml_git_check ALL COMMAND "${CMAKE_COMMAND}" -E touch "${NBL_GTML_STAMP_FILE}")

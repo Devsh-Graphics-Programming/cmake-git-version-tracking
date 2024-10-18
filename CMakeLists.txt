@@ -32,6 +32,7 @@ function(NBL_ADD_GIT_TRACKING_META_LIBRARY GTML_NAME GIT_WORKING_DIR)
 
     set(GTML_TARGET_NAME "${GTML_NAME}_check_git")
     set(POST_CONFIGURE_FILE "${NBL_GTML_BINARY_DIR}/${GTML_NAME}_git_info.cpp")
+    set(GIT_STATE_FILE "${CMAKE_CURRENT_BINARY_DIR}/${GTML_NAME}_git-state-hash")
     include("${SRC_DIR}/git_watcher.cmake")
 
     set(NBL_GTML_TRACKED_TARGETS ${NBL_GTML_TRACKED_TARGETS} "${GTML_NAME}" CACHE INTERNAL "")
@@ -72,7 +73,9 @@ function(NBL_GENERATE_GIT_TRACKING_META)
     set_target_properties("${NBL_GTML_PROJECT_NAME}" PROPERTIES UNITY_BUILD TRUE)
     
     # triggers all git check custom commands each build
-    add_custom_target(gtml_git_check ALL COMMAND "${CMAKE_COMMAND}" -E touch "${NBL_GTML_STAMP_FILE}")
-    add_dependencies("${NBL_GTML_PROJECT_NAME}" gtml_git_check)
+    add_custom_target("gtml_git_check" ALL COMMAND "${CMAKE_COMMAND}" -E touch "${NBL_GTML_STAMP_FILE}"
+        BYPRODUCTS "${NBL_GTML_STAMP_FILE}"
+    )
+    add_dependencies("${NBL_GTML_PROJECT_NAME}" "gtml_git_check")
 
 endfunction(NBL_GENERATE_GIT_TRACKING_META)
